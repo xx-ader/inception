@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mydbmariam
+    env_file: .env
+    restart: on-failure
+    ports:
+      - "3306:3306"
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: myserv
+    restart: on-failure
+    ports:
+      - "5000:80"
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: mywordpress
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mydbmariam
+      WORDPRESS_DB_USER: reda
+      WORDPRESS_DB_PASSWORD: 123
+      WORDPRESS_DB_NAME: wpdb
+    depends_on:
+      - mariadb
